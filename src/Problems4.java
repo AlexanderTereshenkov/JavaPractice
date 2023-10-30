@@ -6,6 +6,11 @@ public class Problems4 {
         System.out.println(nonRepeatable("abracadabra"));
         System.out.println(nonRepeatable("paparazzi"));
 
+        System.out.println("----- #2");
+        System.out.println(Arrays.toString(generateBrackets(1)));
+        System.out.println(Arrays.toString(generateBrackets(2)));
+        System.out.println(Arrays.toString(generateBrackets(3)));
+
         System.out.println("----- #3");
         System.out.println(Arrays.toString(binarySystem(3)));
         System.out.println(Arrays.toString(binarySystem(4)));
@@ -24,11 +29,22 @@ public class Problems4 {
         System.out.println(convertToNum("thirty one"));
 
         System.out.println("----- #7");
-
         System.out.println(uniqueSubstring("12342324"));
         System.out.println(uniqueSubstring("111111"));
         System.out.println(uniqueSubstring("77897898"));
 
+        System.out.println("----- #8");
+        System.out.println(shortestWay(new int[][] {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}}));
+        System.out.println(shortestWay(new int[][] {{2, 7, 3}, {1, 4, 8}, {4, 5, 9}}));
+
+        System.out.println("----- #9");
+        System.out.println(numericOrder("t3o the5m 1One all6 r4ule ri2ng"));
+        System.out.println(numericOrder("re6sponsibility Wit1h gr5eat power3 4comes g2reat"));
+
+        System.out.println("----- #10");
+        System.out.println(switchNums(519, 723));
+        System.out.println(switchNums(491, 3912));
+        System.out.println(switchNums(6274, 71259));
     }
 
     private static String nonRepeatable(String inputString){
@@ -44,6 +60,43 @@ public class Problems4 {
         index++;
         currentAnswer = deleteDuplicatesRecursion(inputString, index, currentAnswer);
         return currentAnswer;
+    }
+
+    private static String[] generateBrackets(int count){
+
+        ArrayList<String> answer = new ArrayList<>();
+        recursionGeneration(count, answer,new String());
+        return answer.toArray(new String[0]);
+    }
+
+    private static void recursionGeneration(int count, ArrayList<String> curAnswers, String answer){
+        System.out.println(answer);
+        if(answer.length() / 2 == count){
+            curAnswers.add(answer);
+        }
+        else{
+            int leftBrackets = 0;
+            int rightBrackets = 0;
+            for(int i = 0; i < answer.length(); i++){
+                if(answer.charAt(i) == '('){
+                    leftBrackets++;
+                }
+                else{
+                    rightBrackets++;
+                }
+            }
+            if(leftBrackets == rightBrackets){
+                recursionGeneration(count, curAnswers, answer + "(");
+            }
+            else{
+                if(rightBrackets < leftBrackets){
+                    if(leftBrackets < count){
+                        recursionGeneration(count, curAnswers, answer + "(");
+                    }
+                    recursionGeneration(count, curAnswers, answer + ")");
+                }
+            }
+        }
     }
 
     public static String[] binarySystem(int len){
@@ -121,10 +174,10 @@ public class Problems4 {
                 }
             }
         }
-        return convertArrayToString(lettersCount);
+        return convertArrayToString(lettersCount.toArray(new String[0]));
     }
 
-    private static String convertArrayToString(ArrayList<String> inputArray){
+    private static String convertArrayToString(String[] inputArray){
         String completeString = "";
         for(String elem : inputArray){
             completeString += elem;
@@ -209,5 +262,81 @@ public class Problems4 {
         return answer == "" ? answer + inputString.charAt(0) : answer;
     }
 
-    
+    public static int shortestWay(int[][] matrix){
+        int matrixLen = matrix.length;
+        int maxIterations = matrix.length * matrix[0].length;
+        int endPointWay = matrix[matrixLen - 1][matrixLen - 1];
+        int curRow = matrixLen - 1;
+        int curColumn = matrixLen - 1;
+        for(int i = 0; i < maxIterations; i++){
+            if(curRow == 0 & curColumn == 0){
+                break;
+            }
+            if(curRow - 1 >= 0 & curColumn - 1 >= 0){
+                if(matrix[curRow-1][curColumn] < matrix[curRow][curColumn-1]){
+                    curRow -= 1;
+                    endPointWay += matrix[curRow][curColumn];
+                }
+                else{
+                    curColumn -= 1;
+                    endPointWay += matrix[curRow][curColumn];
+                }
+            }
+            else if(curRow - 1 < 0){
+                while(curColumn > 0){
+                    curColumn -= 1;
+                    endPointWay += matrix[curRow][curColumn];
+                }
+                break;
+            }
+            else if(curColumn - 1 < 0){
+                while(curRow > 0){
+                    curRow -= 1;
+                    endPointWay += matrix[curRow][curColumn];
+                }
+                break;
+            }
+        }
+        return endPointWay;
+    }
+
+    public static String numericOrder(String inputString){
+        String[] wordsWithNumbers = inputString.split(" ");
+        String[] answer = new String[wordsWithNumbers.length];
+        String nums = "0123456789";
+        for(int i = 0; i < wordsWithNumbers.length; i++){
+            String tempWord = wordsWithNumbers[i];
+            String intPlace = "";
+            String wordInPlace = "";
+            for(int j = 0; j < tempWord.length(); j++){
+                if(nums.indexOf(tempWord.charAt(j)) == -1){
+                    wordInPlace += tempWord.charAt(j);
+                }
+                else {
+                    intPlace += tempWord.charAt(j);
+                }
+            }
+            answer[Integer.parseInt(intPlace) - 1] = wordInPlace + " ";
+        }
+        return convertArrayToString(answer);
+    }
+
+    public static int switchNums(int a, int b){
+        String secondNum = String.valueOf(b);
+        ArrayList<Integer> numsInFirst = new ArrayList<>();
+        while (a > 0){
+            numsInFirst.add(a % 10);
+            a /= 10;
+        }
+        Collections.sort(numsInFirst, Collections.reverseOrder());
+        for(int i = 0; i < numsInFirst.size(); i++){
+            for(int j = 0; j < secondNum.length(); j++){
+                if(numsInFirst.get(i) > Integer.valueOf(String.valueOf(secondNum.charAt(j)))){
+                    secondNum = secondNum.substring(0, j) + numsInFirst.get(i).toString() + secondNum.substring(j + 1);
+                    break;
+                }
+            }
+        }
+        return Integer.parseInt(secondNum);
+    }
 }

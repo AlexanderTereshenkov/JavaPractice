@@ -5,10 +5,29 @@ import java.util.List;
 public class Test {
     public static void main(String[] args)
     {
-        for (int i = 0; i < 10; i++) {
-            System.out.println(i);
-            i -= 50;
+        String a = "123";
+        System.out.println(a.substring(0, 2));
+    }
+
+    public static String numericOrder(String inputString){
+        String[] wordsWithNumbers = inputString.split(" ");
+        String[] answer = new String[wordsWithNumbers.length];
+        String nums = "0123456789";
+        for(int i = 0; i < wordsWithNumbers.length; i++){
+            String tempWord = wordsWithNumbers[i];
+            String intPlace = "";
+            String wordInPlace = "";
+            for(int j = 0; j < tempWord.length(); j++){
+                if(nums.indexOf(tempWord.charAt(j)) == -1){
+                    wordInPlace += tempWord.charAt(j);
+                }
+                else {
+                    intPlace += tempWord.charAt(j);
+                }
+            }
+            answer[Integer.parseInt(intPlace) - 1] = wordInPlace;
         }
+        return "";
     }
 
     private static String convertToBinary(int i){
