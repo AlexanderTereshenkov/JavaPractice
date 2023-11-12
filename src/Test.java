@@ -5,8 +5,22 @@ import java.util.List;
 public class Test {
     public static void main(String[] args)
     {
-        String a = "123";
-        System.out.println(a.substring(0, 2));
+        test(0);
+    }
+
+    private static void test(int i){
+        if( i == 5 | i == 15){
+            System.out.println("AAAAAAAAAAAAAAAAAA");
+        }
+        else {
+            System.out.println(i);
+            i++;
+            if(i == 3){
+                test(10);
+            }
+            System.out.println("What the fuck am i doing");
+            test(i);
+        }
     }
 
     public static String numericOrder(String inputString){

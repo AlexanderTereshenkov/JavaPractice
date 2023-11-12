@@ -16,7 +16,7 @@ public class Problems4 {
         System.out.println(Arrays.toString(binarySystem(4)));
 
         System.out.println("----- #4");
-        System.out.println(alphabeticRow("abcdjuwx"));
+        System.out.println(alphabeticRow("aba"));
         System.out.println(alphabeticRow("klmabzyxw"));
 
         System.out.println("----- #5");
@@ -24,7 +24,7 @@ public class Problems4 {
         System.out.println(letterPattern("vvvvaajaaaaa"));
 
         System.out.println("----- #6");
-        System.out.println(convertToNum("eight"));
+        System.out.println(convertToNum("zero"));
         System.out.println(convertToNum("five hundred sixty seven"));
         System.out.println(convertToNum("thirty one"));
 
@@ -70,7 +70,6 @@ public class Problems4 {
     }
 
     private static void recursionGeneration(int count, ArrayList<String> curAnswers, String answer){
-        System.out.println(answer);
         if(answer.length() / 2 == count){
             curAnswers.add(answer);
         }
@@ -125,17 +124,34 @@ public class Problems4 {
     }
 
     public static String alphabeticRow(String input){
-        input += " ";
+        input = " " + input + " ";
         int maxCount = 0;
         String currentAnswer = "";
         String tempAnswer = "";
-        for(int i = 0; i < input.length() - 1; i++){
-            if(Math.abs((int) input.charAt(i) - (int) input.charAt(i + 1)) == 1){
+        for(int i = 1; i < input.length() - 1; i++){
+            if((int) input.charAt(i) - (int) input.charAt(i + 1) == 1){
+                if((int) input.charAt(i-1) - (int) input.charAt(i) == -1){
+                    if(tempAnswer.length() > maxCount){
+                        maxCount = tempAnswer.length();
+                        currentAnswer = tempAnswer;
+                    }
+                    tempAnswer = "";
+                }
+                tempAnswer += input.charAt(i);
+            }
+            else if((int) input.charAt(i) - (int) input.charAt(i + 1) == -1){
+                if((int) input.charAt(i-1) - (int) input.charAt(i) == 1){
+                    if(tempAnswer.length() > maxCount){
+                        maxCount = tempAnswer.length();
+                        currentAnswer = tempAnswer;
+                    }
+                    tempAnswer = "";
+                }
                 tempAnswer += input.charAt(i);
             }
             else{
-                if(tempAnswer.length() + 1 >= maxCount){
-                    tempAnswer += input.charAt(i);
+                tempAnswer += input.charAt(i);
+                if(tempAnswer.length() > maxCount){
                     maxCount = tempAnswer.length();
                     currentAnswer = tempAnswer;
                 }
@@ -202,6 +218,7 @@ public class Problems4 {
 
     private static HashMap<String, Integer> getNumsHashMap(){
         HashMap<String, Integer> stringToNum = new HashMap<>();
+        stringToNum.put("zero", 0);
         stringToNum.put("one", 1);
         stringToNum.put("two", 2);
         stringToNum.put("three", 3);
@@ -259,7 +276,7 @@ public class Problems4 {
                 i = previousIndex + 1;
             }
         }
-        return answer == "" ? answer + inputString.charAt(0) : answer;
+        return answer.isEmpty() ? answer + inputString.charAt(0) : answer;
     }
 
     public static int shortestWay(int[][] matrix){
