@@ -5,7 +5,11 @@ import java.util.List;
 public class Test {
     public static void main(String[] args)
     {
-        test(0);
+        int year = 2021;
+        boolean isLeap = false;
+        if(year % 100 == 0) isLeap = (year / 400f) % 1 == 0;
+        isLeap = (year / 4f) % 1 == 0;
+        System.out.println(1 % 12);
     }
 
     private static void test(int i){
